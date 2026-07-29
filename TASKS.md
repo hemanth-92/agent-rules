@@ -5,7 +5,7 @@
 - [x] Scaffold repository layout from titus-ai pattern
 - [x] Add core skills (project manager, PR readiness, rust, python, bash, linux)
 - [x] Write install, bootstrap, validate, and test scripts
-- [ ] Publish to GitHub (`hemanth-92/agent-rules`) — local commit ready; needs remote create + push
+- [x] Publish to GitHub (`hemanth-92/agent-rules`)
 - [x] Run local install for this machine (Codex + Claude + Grok)
 
 ## Phase 2 — Multi-agent and project bootstrap
