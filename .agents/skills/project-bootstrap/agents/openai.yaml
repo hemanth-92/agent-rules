@@ -1,0 +1,3 @@
+interface:
+  display_name: "Project Bootstrap"
+  short_description: "Scaffold AGENTS/SPEC/ROADMAP/TASKS for a repository"

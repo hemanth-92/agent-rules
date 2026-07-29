@@ -1,0 +1,16 @@
+# Base Codex configuration. The installer copies this file and appends
+# trusted-project entries for ~/coding, ~/github, and discovered worktrees.
+# Do not put machine-specific absolute project paths in this source file.
+
+approval_policy = "on-request"
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+
+[features]
+fast_mode = false
+memories = true
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "project-name", "git-branch"]
+status_line_use_colors = true
