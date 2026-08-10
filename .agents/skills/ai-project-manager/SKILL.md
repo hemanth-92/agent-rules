@@ -14,14 +14,18 @@ description: Turn repository planning docs into actionable AI-agent implementati
    and surface conflicts.
 3. Determine missing requirements, unresolved decisions, dependencies, risks,
    and implementation impact.
-4. Create a phase plan that maps to acceptance criteria and defines automated
-   validation, manual validation, rollback, and pause points.
+4. Create a milestone-based phase plan written to a markdown file (`TASKS.md` or
+   plan doc) that maps to acceptance criteria and defines automated validation,
+   manual validation, rollback, and pause points.
 5. Present the plan and stop when the user requested planning only or reserved
    implementation approval.
-6. Once implementation is authorized, execute one reviewable phase at a time.
+6. Once implementation is authorized, execute one reviewable milestone per
+   session to bound context window growth and avoid overwhelming the agent.
 7. Validate the phase, inspect the diff, summarize evidence, and update task
    status only after the exit criteria pass.
-8. Hand completed implementation to a pull-request readiness workflow when the
+8. Use the milestone markdown file and Git commit history as the context for
+   subsequent sessions tackling remaining milestones.
+9. Hand completed implementation to a pull-request readiness workflow when the
    user asks to prepare, review, publish, or merge the change.
 
 ## Diagnostics
@@ -36,11 +40,14 @@ Read every applicable `AGENTS.md` and each planning document relevant to the
 task. Do not assume that planning files live under `docs/`.
 
 If the user asks to create missing planning files, adapt the templates under
-`assets/project-docs/` to the repository. Remove irrelevant sections instead of
+`templates/project-docs/` to the repository. Remove irrelevant sections instead of
 leaving placeholders or inventing requirements.
 
 ## Safety Rules
 
+- Keep tasks simple, self-contained, and with low dependencies on other things.
+- Bound work to one task per session to limit context window growth and token expense.
+- Write complex plans to markdown and carry context across sessions via the plan file and Git commit history.
 - Never rewrite project requirements unless asked.
 - Never mark a task done without validation or a stated reason validation was skipped.
 - Never ignore conflicts between SPEC, ROADMAP, TASKS, and code.

@@ -33,13 +33,26 @@
 14. Merge only after the final diff, planning documents, CI, reviews, threads,
     and manual tests are clean.
 
+## Session and context management
+
+- **Keep tasks simple and self-contained**: Scope each unit of work to have low
+  dependencies on other tasks or components.
+- **One task per session**: Limit each agent session to a single task or
+  milestone to avoid overwhelming the agent and prevent rapid token expense
+  rate growth as context expands.
+- **Milestone planning in markdown**: When a task is too complex for one
+  session, write a milestone-based plan to a markdown file (`TASKS.md` or a
+  dedicated planning document).
+- **Context handoff via plan and Git history**: For subsequent milestones, open
+  a fresh session and provide the markdown plan file plus Git commit history as
+  context instead of carrying over unbounded conversational history.
+
 ## Security baseline
 
 Establish the security checks that apply to the repository:
 
 - Enable secret scanning and push protection where available.
-- Configure Dependabot for every package ecosystem and GitHub Actions.
-- Run dependency review when dependency manifests can change.
+- Keep dependencies updated and review dependency changes when manifests change.
 - Document accepted exceptions with a reason, owner, and review date.
 
 ## Documentation rule

@@ -12,6 +12,10 @@ Describe the project, its users, and the outcome it provides.
 
 ## Working boundaries
 
+- Keep tasks simple and self-contained with low dependencies on other things.
+- Focus on one task per session to control context window and token growth.
+- For complex tasks, maintain a milestone-based plan in markdown (`TASKS.md` or
+  plan doc) and rely on the plan and Git commit history for session context.
 - Preserve unrelated changes.
 - Do not expose or commit credentials, sessions, private data, or environment
   files.

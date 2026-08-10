@@ -15,6 +15,11 @@ follows the AGENTS.md convention for tools that load it automatically.
 - Say when a premise appears wrong before implementing around it.
 - Ask before proceeding only when a request has multiple plausible
   interpretations and the choice materially affects the result.
+- Keep tasks simple, self-contained, and with low dependencies on other things.
+- Work on one task per session to bound context window growth and prevent token
+  expense rate escalation.
+- For complex tasks, write a milestone-based plan to a markdown file; use that
+  plan file and Git commit history as context for fresh sessions.
 - Touch only what the task requires. Avoid drive-by refactors, formatting, or
   cleanup.
 - Keep communication direct and concise. Skip flattery, filler, ceremonial

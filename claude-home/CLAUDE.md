@@ -4,6 +4,11 @@
 
 - Inspect repository `AGENTS.md` and existing changes before editing.
 - Prefer small, reviewable changes with relevant validation.
+- Keep tasks simple and self-contained with low dependencies on other things.
+- Work on one task per session; limit context window growth to keep token
+  expense rate low and avoid overwhelming the agent.
+- For complex tasks, write a milestone-based plan to a markdown file; use that
+  plan file and Git commit history as context for fresh sessions.
 - Do not expose credentials, tokens, private keys, or secret file contents.
 - Do not perform destructive operations without explicit authorization.
 - Treat explicit user stop points as hard boundaries.
