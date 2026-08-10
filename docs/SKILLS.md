@@ -29,6 +29,7 @@ Rules:
 
 - `ai-project-manager`
 - `bash-scripting`
+- `data-pipeline-bdd`
 - `linux-sysadmin`
 - `pr-readiness`
 - `project-bootstrap`
