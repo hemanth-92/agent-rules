@@ -5,6 +5,7 @@ dry_run=false
 install_plugins=false
 install_claude=false
 install_grok=false
+install_cursor=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -20,12 +21,15 @@ while [[ $# -gt 0 ]]; do
     --grok)
       install_grok=true
       ;;
+    --cursor)
+      install_cursor=true
+      ;;
     -h | --help)
-      printf 'usage: %s [--dry-run] [--plugins] [--claude] [--grok]\n' "$0"
+      printf 'usage: %s [--dry-run] [--plugins] [--claude] [--grok] [--cursor]\n' "$0"
       exit 0
       ;;
     *)
-      printf 'usage: %s [--dry-run] [--plugins] [--claude] [--grok]\n' "$0" >&2
+      printf 'usage: %s [--dry-run] [--plugins] [--claude] [--grok] [--cursor]\n' "$0" >&2
       exit 2
       ;;
   esac
@@ -37,6 +41,7 @@ codex_home="${CODEX_HOME:-$HOME/.codex}"
 agents_home="${AGENTS_HOME:-$HOME/.agents}"
 claude_home="${CLAUDE_HOME:-$HOME/.claude}"
 grok_home="${GROK_HOME:-$HOME/.grok}"
+cursor_home="${CURSOR_HOME:-$HOME/.cursor}"
 timestamp="$(date +%Y%m%d-%H%M%S)"
 backup_root="$codex_home/backups/agent-rules-$timestamp-$$"
 plugin_manifest="$repo_root/codex-plugins.txt"
@@ -134,6 +139,9 @@ backup_path_for() {
   elif [[ "$target" == "$grok_home/"* ]]; then
     relative="${target#"$grok_home"/}"
     backup="$backup_root/grok/$relative"
+  elif [[ "$target" == "$cursor_home/"* ]]; then
+    relative="${target#"$cursor_home"/}"
+    backup="$backup_root/cursor/$relative"
   else
     relative="$(basename "$target")"
     backup="$backup_root/other/$relative"
@@ -310,6 +318,10 @@ if "$install_grok"; then
   install_skills_into "$grok_home/skills"
 fi
 
+if "$install_cursor"; then
+  install_skills_into "$cursor_home/skills"
+fi
+
 if "$install_plugins"; then
   install_recommended_plugins
 fi
@@ -323,5 +335,8 @@ else
   fi
   if ! "$install_grok"; then
     printf 'tip: rerun with --grok to install Grok skills\n'
+  fi
+  if ! "$install_cursor"; then
+    printf 'tip: rerun with --cursor to install Cursor skills\n'
   fi
 fi

@@ -3,7 +3,7 @@
 Portable AI coding-agent configuration, rules, and reusable skills.
 
 Inspired by [titus-ai](https://github.com/ChrisTitusTech/titus-ai). Works with
-**Codex**, **Claude Code**, and **Grok**, and gives you a consistent
+**Antigravity**, **Cursor**, **Codex**, **Claude Code**, and **Grok**, and gives you a consistent
 `AGENTS.md` / `SPEC.md` / `ROADMAP.md` / `TASKS.md` workflow you can pull into
 every project.
 
@@ -18,8 +18,8 @@ cd ~/coding/agent-rules
 ./scripts/install.sh --dry-run
 ./scripts/install.sh
 
-# Optional: also install into Claude and Grok skill directories
-./scripts/install.sh --claude --grok
+# Optional: also install into Claude, Grok, and Cursor skill directories
+./scripts/install.sh --claude --grok --cursor
 
 # Bootstrap planning docs into a project
 ./scripts/bootstrap-project.sh ~/coding/my-app
@@ -64,8 +64,13 @@ Plugin IDs live in `codex-plugins.txt`. The default selection is
 hits the agent context window:
 
 ```bash
-cargo install --git https://github.com/rtk-ai/rtk
-export PATH="$HOME/.cargo/bin:$PATH"
+# Quick install pre-built binary (Linux/macOS)
+curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+
+# Or install from source via Cargo (requires Rust toolchain):
+# cargo install --git https://github.com/rtk-ai/rtk
+
 rtk --version
 rtk gain
 ```

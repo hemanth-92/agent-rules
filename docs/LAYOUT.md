@@ -12,11 +12,13 @@
 
 ## Optional multi-agent targets
 
-| Flag | Source | Target |
+| Flag / Agent | Source | Target |
 | --- | --- | --- |
 | `--claude` | `claude-home/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 | `--claude` | `.agents/skills/*` | `~/.claude/skills/*` |
 | `--grok` | `.agents/skills/*` | `~/.grok/skills/*` |
+| `--cursor` | `.agents/skills/*` | `~/.cursor/skills/*` |
+| Antigravity | `.agents/skills/*` | `~/.agents/skills/*` (or `~/.gemini/config/skills/*`) |
 
 ## Project discovery roots
 

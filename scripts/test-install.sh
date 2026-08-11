@@ -7,6 +7,7 @@ test_codex_home="$task_test_root/codex home"
 test_agents_home="$task_test_root/agents home"
 test_claude_home="$task_test_root/claude home"
 test_grok_home="$task_test_root/grok home"
+test_cursor_home="$task_test_root/cursor home"
 test_user_home="$task_test_root/user home"
 test_coding_repo="$test_user_home/coding/nested/project"
 test_github_repo="$test_user_home/github/nested/project"
@@ -42,7 +43,8 @@ HOME="$test_user_home" \
   AGENTS_HOME="$test_agents_home" \
   CLAUDE_HOME="$test_claude_home" \
   GROK_HOME="$test_grok_home" \
-  "$repo_root/scripts/install.sh" --claude --grok >/dev/null
+  CURSOR_HOME="$test_cursor_home" \
+  "$repo_root/scripts/install.sh" --claude --grok --cursor >/dev/null
 
 assert_link "$test_codex_home/AGENTS.md" "$repo_root/codex-home/AGENTS.md"
 [[ -f "$test_codex_home/config.toml" && ! -L "$test_codex_home/config.toml" ]] ||
@@ -66,6 +68,7 @@ for skill_dir in "$repo_root"/.agents/skills/*; do
   assert_link "$test_agents_home/skills/$name" "$skill_dir"
   assert_link "$test_claude_home/skills/$name" "$skill_dir"
   assert_link "$test_grok_home/skills/$name" "$skill_dir"
+  assert_link "$test_cursor_home/skills/$name" "$skill_dir"
 done
 
 shopt -s nullglob
@@ -82,7 +85,8 @@ HOME="$test_user_home" \
   AGENTS_HOME="$test_agents_home" \
   CLAUDE_HOME="$test_claude_home" \
   GROK_HOME="$test_grok_home" \
-  "$repo_root/scripts/install.sh" --claude --grok >/dev/null
+  CURSOR_HOME="$test_cursor_home" \
+  "$repo_root/scripts/install.sh" --claude --grok --cursor >/dev/null
 
 shopt -s nullglob
 instruction_backups=("$test_codex_home"/backups/agent-rules-*/AGENTS.md)

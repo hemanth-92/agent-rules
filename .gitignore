@@ -74,6 +74,3 @@ archived_sessions/
 shell_snapshots/
 plugins/
 models_cache.json
-
-# Local working task board (template under templates/project-docs stays tracked)
-/TASKS.md
