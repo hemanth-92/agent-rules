@@ -34,6 +34,7 @@ targets are used). Credentials, sessions, history, and caches are left alone.
 | Source | Destination | Purpose |
 | --- | --- | --- |
 | `codex-home/` | `~/.codex/` | Codex global instructions, config, rules, local-model profiles |
+| `claude-home/CLAUDE.md` | `~/.claude/CLAUDE.md` | Claude Code global instructions (`--claude`) |
 | `.agents/skills/` | `~/.agents/skills/` | Reusable skills (Codex / multi-agent) |
 | `.agents/skills/` | `~/.claude/skills/` | Same skills for Claude Code (`--claude`) |
 | `.agents/skills/` | `~/.grok/skills/` | Same skills for Grok (`--grok`) |

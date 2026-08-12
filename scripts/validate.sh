@@ -30,6 +30,7 @@ required_files=(
   "templates/project-docs/ROADMAP.md"
   "templates/project-docs/TASKS.md"
   ".github/pull_request_template.md"
+  ".github/workflows/validate.yml"
   "scripts/install.sh"
   "scripts/bootstrap-project.sh"
   "scripts/test-install.sh"
@@ -58,6 +59,8 @@ if command -v python3 >/dev/null 2>&1; then
 
   python3 -c 'import pathlib, sys, tomllib; config = tomllib.loads(pathlib.Path(sys.argv[1]).read_text()); raise SystemExit(config.get("features", {}).get("memories") is not True)' \
     "$repo_root/codex-home/config.toml" || fail "codex-home/config.toml must enable features.memories"
+else
+  printf 'info: python3 not found; skipping TOML validation\n'
 fi
 
 if [[ -d "$repo_root/.codex/skills" ]]; then
@@ -101,6 +104,14 @@ actual_skills="$(printf '%s' "$actual_skills" | sort)"
 [[ "$documented_skills" == "$actual_skills" ]] ||
   fail "docs/SKILLS.md does not match .agents/skills"
 
+# ai-project-manager ships its own template copies for standalone installs;
+# both sets must stay identical to the tracked templates.
+for skill_doc in "$repo_root"/.agents/skills/ai-project-manager/assets/project-docs/*; do
+  [[ -f "$skill_doc" ]] || continue
+  [[ "$(cat "$skill_doc")" == "$(cat "$repo_root/templates/project-docs/$(basename "$skill_doc")")" ]] ||
+    fail "ai-project-manager assets/project-docs/$(basename "$skill_doc") does not match templates/project-docs"
+done
+
 for forbidden in auth.json history.jsonl installation_id state_5.sqlite goals_1.sqlite memories_1.sqlite; do
   [[ ! -e "$repo_root/$forbidden" ]] || fail "runtime file must not be tracked: $forbidden"
 done
@@ -127,6 +138,8 @@ if command -v shellcheck >/dev/null 2>&1; then
     "$repo_root/scripts/test-install.sh" \
     "$repo_root/scripts/validate.sh" ||
     fail "ShellCheck failed"
+else
+  printf 'info: shellcheck not found; skipping ShellCheck\n'
 fi
 
 if command -v codex >/dev/null 2>&1; then
@@ -140,6 +153,8 @@ if command -v codex >/dev/null 2>&1; then
     python3 -c 'import json, sys; raise SystemExit(json.loads(sys.argv[1]).get("decision") != "allow")' \
       "$policy_result" || fail "default rules must allow rtk commands"
   fi
+else
+  printf 'info: codex not found; skipping exec-policy rule validation\n'
 fi
 
 if ! bash "$repo_root/scripts/test-install.sh"; then

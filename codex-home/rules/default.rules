@@ -4,7 +4,6 @@ prefix_rule(pattern=["rtk"], decision="allow")
 
 # Shells and common command runners.
 prefix_rule(pattern=["/usr/bin/bash"], decision="allow")
-prefix_rule(pattern=["pkexec"], decision="allow")
 
 # File, text, and process utilities.
 prefix_rule(pattern=["sed"], decision="allow")
@@ -41,6 +40,7 @@ prefix_rule(pattern=["gh"], decision="allow")
 prefix_rule(pattern=["ssh"], decision="allow")
 
 # Git operations.
+prefix_rule(pattern=["git"], decision="allow")
 
 # Development SDKs, runtimes, package managers, and framework CLIs.
 prefix_rule(pattern=["dotnet"], decision="allow")

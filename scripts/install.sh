@@ -71,6 +71,12 @@ run() {
   fi
 }
 
+report() {
+  if ! "$dry_run"; then
+    printf '%s\n' "$*"
+  fi
+}
+
 cleanup() {
   if [[ -n "$rendered_config" && -f "$rendered_config" ]]; then
     rm -f -- "$rendered_config"
@@ -191,11 +197,11 @@ link_managed_path() {
     backup="$(backup_path_for "$target")"
     ensure_parent "$backup"
     run mv "$target" "$backup"
-    printf 'backed up: %s -> %s\n' "$target" "$backup"
+    report "backed up: $target -> $backup"
   fi
 
   run ln -s "$source" "$target"
-  printf 'linked: %s -> %s\n' "$target" "$source"
+  report "linked: $target -> $source"
 }
 
 append_trusted_project() {
@@ -268,11 +274,11 @@ install_managed_config() {
     backup="$(backup_path_for "$target")"
     ensure_parent "$backup"
     run mv "$target" "$backup"
-    printf 'backed up: %s -> %s\n' "$target" "$backup"
+    report "backed up: $target -> $backup"
   fi
 
   run cp "$rendered_config" "$target"
-  printf 'installed: %s\n' "$target"
+  report "installed: $target"
 }
 
 install_recommended_plugins() {
