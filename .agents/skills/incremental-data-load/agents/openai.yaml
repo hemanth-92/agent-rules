@@ -1,0 +1,4 @@
+interface:
+  display_name: "Incremental Data Load"
+  short_description: "Design incremental pipeline extraction, load, and backfill"
+  default_prompt: "Use $incremental-data-load to design or review an incremental data pipeline."

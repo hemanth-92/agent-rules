@@ -89,6 +89,7 @@ $rust-cli add a clap subcommand
 $python-ai add an Ollama-backed provider
 $bash-scripting harden this installer
 $data-pipeline-bdd generate a Spark ETL pipeline from Gherkin specs
+$incremental-data-load design the extraction and backfill for this pipeline
 $linux-sysadmin diagnose this service failure
 $project-bootstrap scaffold planning docs for this repo
 ```

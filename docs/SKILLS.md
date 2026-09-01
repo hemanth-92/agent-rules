@@ -30,6 +30,7 @@ Rules:
 - `ai-project-manager`
 - `bash-scripting`
 - `data-pipeline-bdd`
+- `incremental-data-load`
 - `linux-sysadmin`
 - `pr-readiness`
 - `project-bootstrap`
