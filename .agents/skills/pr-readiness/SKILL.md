@@ -1,6 +1,7 @@
 ---
 name: pr-readiness
 description: Validate local or published changes from final diff through pull-request merge readiness, including project gates, local CodeRabbit review, CI, independent review, thread resolution, and manual-test evidence. Use when asked to review uncommitted work, prepare or open a pull request, check whether a PR is ready, address final review feedback, or verify merge readiness.
+category: workflow
 ---
 
 # PR readiness

@@ -52,7 +52,8 @@ follows the AGENTS.md convention for tools that load it automatically.
 - Use simple ASCII punctuation unless a file format requires otherwise.
 - Keep credentials, tokens, sessions, history, caches, logs, and runtime
   databases out of this repository.
-- Put reusable workflows in `.agents/skills/<name>/SKILL.md`.
+- Put reusable workflows in `.agents/skills/<name>/SKILL.md`, each declaring a
+  `category` from `skill-categories.txt`.
 - Put portable Codex configuration in `codex-home/`.
 - Put portable Claude instructions in `claude-home/`.
 - Put project doc templates in `templates/project-docs/`.

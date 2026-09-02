@@ -1,6 +1,7 @@
 ---
 name: project-bootstrap
 description: Scaffold or refresh AI project planning docs (AGENTS.md, SPEC.md, ROADMAP.md, TASKS.md) for a repository using agent-rules templates. Use when starting a new project, adding agent docs to an existing repo, or reconciling missing planning files.
+category: workflow
 ---
 
 # project-bootstrap

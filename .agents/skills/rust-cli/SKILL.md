@@ -1,6 +1,7 @@
 ---
 name: rust-cli
 description: Design, implement, test, document, and release Rust command line applications using Cargo, clap, integration tests, error handling, and CLI UX conventions. Use when asked to build or review a Rust CLI, add commands or flags, improve tests, package releases, or debug Cargo workflows.
+category: systems
 ---
 
 # rust-cli

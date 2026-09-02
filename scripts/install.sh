@@ -6,6 +6,44 @@ install_plugins=false
 install_claude=false
 install_grok=false
 install_cursor=false
+list_categories=false
+list_skills=false
+prune_skills=false
+selected_categories=()
+selected_skills=()
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+category_manifest="$repo_root/skill-categories.txt"
+
+usage() {
+  cat <<'USAGE'
+usage: install.sh [options]
+
+Targets:
+  --claude              also install skills and CLAUDE.md into ~/.claude
+  --grok                also install skills into ~/.grok
+  --cursor              also install skills into ~/.cursor
+  --plugins             install recommended Codex plugins
+
+Skill selection (default: all skills):
+  --category NAME       install only skills in this category (repeatable)
+  --skill NAME          install only this skill (repeatable)
+  --prune               remove previously linked skills that are not selected
+  --list-categories     print categories with their skills and exit
+  --list-skills         print skills with their categories and exit
+
+Other:
+  --dry-run             print actions without changing anything
+  -h, --help            show this help
+USAGE
+}
+
+require_value() {
+  if [[ -z "${2:-}" ]]; then
+    printf 'error: %s requires a value\n' "$1" >&2
+    exit 2
+  fi
+}
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -24,19 +62,46 @@ while [[ $# -gt 0 ]]; do
     --cursor)
       install_cursor=true
       ;;
+    --category)
+      require_value "$1" "${2:-}"
+      selected_categories+=("$2")
+      shift
+      ;;
+    --category=*)
+      require_value --category "${1#*=}"
+      selected_categories+=("${1#*=}")
+      ;;
+    --skill)
+      require_value "$1" "${2:-}"
+      selected_skills+=("$2")
+      shift
+      ;;
+    --skill=*)
+      require_value --skill "${1#*=}"
+      selected_skills+=("${1#*=}")
+      ;;
+    --prune)
+      prune_skills=true
+      ;;
+    --list-categories)
+      list_categories=true
+      ;;
+    --list-skills)
+      list_skills=true
+      ;;
     -h | --help)
-      printf 'usage: %s [--dry-run] [--plugins] [--claude] [--grok] [--cursor]\n' "$0"
+      usage
       exit 0
       ;;
     *)
-      printf 'usage: %s [--dry-run] [--plugins] [--claude] [--grok] [--cursor]\n' "$0" >&2
+      printf 'error: unknown option: %s\n' "$1" >&2
+      usage >&2
       exit 2
       ;;
   esac
   shift
 done
 
-repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 codex_home="${CODEX_HOME:-$HOME/.codex}"
 agents_home="${AGENTS_HOME:-$HOME/.agents}"
 claude_home="${CLAUDE_HOME:-$HOME/.claude}"
@@ -49,6 +114,130 @@ config_source="$repo_root/codex-home/config.toml"
 coding_root="$HOME/coding"
 github_root="$HOME/github"
 rendered_config=""
+
+if [[ ! -f "$category_manifest" ]]; then
+  printf 'error: category manifest does not exist: %s\n' "$category_manifest" >&2
+  exit 1
+fi
+
+# Category names, in manifest order.
+category_names() {
+  sed -n 's/^\([a-z0-9][a-z0-9-]*\):.*/\1/p' "$category_manifest"
+}
+
+category_description() {
+  sed -n "s/^$1: *//p" "$category_manifest" | sed -n '1p'
+}
+
+# The `category:` value from a skill's YAML front matter.
+skill_category() {
+  awk '
+    NR == 1 { if ($0 != "---") exit; next }
+    /^---$/ { exit }
+    /^category:[[:space:]]*/ {
+      sub(/^category:[[:space:]]*/, "")
+      sub(/[[:space:]]+$/, "")
+      print
+      exit
+    }
+  ' "$1"
+}
+
+skill_names() {
+  local skill_dir
+
+  for skill_dir in "$repo_root"/.agents/skills/*; do
+    [[ -d "$skill_dir" ]] || continue
+    basename "$skill_dir"
+  done
+}
+
+contains_element() {
+  local needle="$1"
+  local element
+  shift
+
+  for element in "$@"; do
+    [[ "$element" == "$needle" ]] && return 0
+  done
+
+  return 1
+}
+
+# A skill is selected when no filter was given, or when it matches one.
+skill_selected() {
+  local name="$1"
+  local category="$2"
+
+  if ((${#selected_categories[@]} == 0 && ${#selected_skills[@]} == 0)); then
+    return 0
+  fi
+
+  contains_element "$name" ${selected_skills[@]+"${selected_skills[@]}"} && return 0
+  contains_element "$category" ${selected_categories[@]+"${selected_categories[@]}"} && return 0
+
+  return 1
+}
+
+validate_selection() {
+  local name
+  local known_categories
+  local known_skills
+
+  mapfile -t known_categories < <(category_names)
+  mapfile -t known_skills < <(skill_names)
+
+  for name in ${selected_categories[@]+"${selected_categories[@]}"}; do
+    if ! contains_element "$name" "${known_categories[@]}"; then
+      printf 'error: unknown category: %s\n' "$name" >&2
+      printf 'known categories: %s\n' "${known_categories[*]}" >&2
+      exit 2
+    fi
+  done
+
+  for name in ${selected_skills[@]+"${selected_skills[@]}"}; do
+    if ! contains_element "$name" "${known_skills[@]}"; then
+      printf 'error: unknown skill: %s\n' "$name" >&2
+      printf 'known skills: %s\n' "${known_skills[*]}" >&2
+      exit 2
+    fi
+  done
+}
+
+print_categories() {
+  local category
+  local name
+
+  while read -r category; do
+    printf '%s - %s\n' "$category" "$(category_description "$category")"
+    while read -r name; do
+      if [[ "$(skill_category "$repo_root/.agents/skills/$name/SKILL.md")" == "$category" ]]; then
+        printf '  %s\n' "$name"
+      fi
+    done < <(skill_names)
+  done < <(category_names)
+}
+
+print_skills() {
+  local name
+
+  while read -r name; do
+    printf '%-24s %s\n' "$name" \
+      "$(skill_category "$repo_root/.agents/skills/$name/SKILL.md")"
+  done < <(skill_names)
+}
+
+if "$list_categories"; then
+  print_categories
+  exit 0
+fi
+
+if "$list_skills"; then
+  print_skills
+  exit 0
+fi
+
+validate_selection
 
 if "$install_plugins"; then
   if [[ ! -f "$plugin_manifest" ]]; then
@@ -291,14 +480,55 @@ install_recommended_plugins() {
   done <"$plugin_manifest"
 }
 
+# Remove links this installer previously created for skills that the current
+# selection excludes. Only symbolic links pointing into this repository's skill
+# directory are touched; unmanaged files and directories are left alone.
+prune_skills_from() {
+  local skills_root="$1"
+  local managed_root="$repo_root/.agents/skills"
+  local entry
+  local name
+  local link_target
+  local skill_file
+  local category
+
+  [[ -d "$skills_root" ]] || return 0
+
+  for entry in "$skills_root"/*; do
+    [[ -L "$entry" ]] || continue
+    link_target="$(readlink "$entry")"
+    [[ "$link_target" == "$managed_root/"* ]] || continue
+
+    name="$(basename "$entry")"
+    skill_file="$managed_root/$name/SKILL.md"
+    category=""
+    if [[ -f "$skill_file" ]]; then
+      category="$(skill_category "$skill_file")"
+      skill_selected "$name" "$category" && continue
+    fi
+
+    run rm -- "$entry"
+    report "pruned: $entry"
+  done
+}
+
 install_skills_into() {
   local skills_root="$1"
   local skill_dir
+  local name
+  local category
 
   for skill_dir in "$repo_root"/.agents/skills/*; do
     [[ -d "$skill_dir" ]] || continue
-    link_managed_path "$skill_dir" "$skills_root/$(basename "$skill_dir")"
+    name="$(basename "$skill_dir")"
+    category="$(skill_category "$skill_dir/SKILL.md")"
+    skill_selected "$name" "$category" || continue
+    link_managed_path "$skill_dir" "$skills_root/$name"
   done
+
+  if "$prune_skills"; then
+    prune_skills_from "$skills_root"
+  fi
 }
 
 render_managed_config

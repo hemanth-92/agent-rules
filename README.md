@@ -21,6 +21,9 @@ cd ~/coding/agent-rules
 # Optional: also install into Claude, Grok, and Cursor skill directories
 ./scripts/install.sh --claude --grok --cursor
 
+# Or install only the skills for one job, e.g. data engineering
+./scripts/install.sh --claude --category data-engineering
+
 # Bootstrap planning docs into a project
 ./scripts/bootstrap-project.sh ~/coding/my-app
 ```
@@ -38,6 +41,46 @@ targets are used). Credentials, sessions, history, and caches are left alone.
 | `.agents/skills/` | `~/.agents/skills/` | Reusable skills (Codex / multi-agent) |
 | `.agents/skills/` | `~/.claude/skills/` | Same skills for Claude Code (`--claude`) |
 | `.agents/skills/` | `~/.grok/skills/` | Same skills for Grok (`--grok`) |
+
+### Skill categories
+
+Every skill declares one `category` in its front matter, defined in
+`skill-categories.txt`. The installer can install a whole category, individual
+skills, or (by default) everything.
+
+| Category | Skills |
+| --- | --- |
+| `data-engineering` | `data-pipeline-bdd`, `incremental-data-load` |
+| `ai-engineering` | `python-ai` |
+| `systems` | `bash-scripting`, `linux-sysadmin`, `rust-cli` |
+| `workflow` | `ai-project-manager`, `project-bootstrap`, `pr-readiness` |
+
+```bash
+./scripts/install.sh --list-categories     # categories and their skills
+./scripts/install.sh --list-skills         # skills and their categories
+
+# One category
+./scripts/install.sh --claude --category data-engineering
+
+# Several categories plus one extra skill
+./scripts/install.sh --claude --category data-engineering \
+  --category ai-engineering --skill bash-scripting
+```
+
+Both flags are repeatable and combine as a union. Selection is additive across
+runs: by default the installer never removes skills a previous run linked, so
+narrowing the selection does not uninstall earlier ones.
+
+Add `--prune` to make the selection exact — it removes links this installer
+previously created for skills outside the current selection:
+
+```bash
+./scripts/install.sh --claude --category data-engineering --prune
+```
+
+Pruning only touches symbolic links pointing into this repository's
+`.agents/skills/`. Skills you added to the target directory yourself are left
+alone.
 
 ### Trusted projects
 
@@ -159,6 +202,7 @@ codex --profile llamacpp
 | `docs/` | Reference docs (loaded only when requested) |
 | `scripts/` | Install, bootstrap, and validation |
 | `codex-plugins.txt` | Opt-in Codex plugin selectors |
+| `skill-categories.txt` | Skill category names and descriptions |
 
 ## Pull updates
 

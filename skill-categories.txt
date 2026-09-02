@@ -1,0 +1,6 @@
+# Skill categories. Every .agents/skills/*/SKILL.md must declare exactly one
+# of these in its `category:` front-matter field. Format: <name>: <description>
+ai-engineering: LLM and AI application development
+data-engineering: Data pipelines, ingestion, and transformation
+systems: Shell, Linux operations, and systems-level tooling
+workflow: Project planning, documentation, and review workflow

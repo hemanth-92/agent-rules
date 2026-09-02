@@ -1,6 +1,7 @@
 ---
 name: incremental-data-load
 description: Design maintainable incremental data pipelines by choosing an extraction pattern, a load strategy, and a backfill strategy. Use when asked to build or review incremental ingestion, pick between overwrite-partition, merge/upsert, and append-only loads, add watermark or CDC-style extraction, make a pipeline idempotent and re-runnable, or plan a bootstrap or backfill of historical data.
+category: data-engineering
 ---
 
 # incremental-data-load

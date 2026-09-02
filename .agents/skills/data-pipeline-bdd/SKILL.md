@@ -1,6 +1,7 @@
 ---
 name: data-pipeline-bdd
 description: Design, implement, test, and validate data engineering pipelines using Gherkin BDD specifications, Extract-Transform-Validate-Load (E-T-V-L) templates, schema contracts, PySpark/DuckDB, and automated test-driven iteration. Use when asked to generate production data pipelines, define ETL requirements with Given/When/Then specs, write behavior tests with behave or pytest, or prevent AI spaghetti code in data workflows.
+category: data-engineering
 ---
 
 # data-pipeline-bdd

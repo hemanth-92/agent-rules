@@ -20,6 +20,17 @@
 | `--cursor` | `.agents/skills/*` | `~/.cursor/skills/*` |
 | Antigravity | `.agents/skills/*` | `~/.agents/skills/*` (or `~/.gemini/config/skills/*`) |
 
+## Skill selection
+
+`--category NAME` and `--skill NAME` narrow which skills are linked into every
+target above; both are repeatable and combine as a union. Categories come from
+`skill-categories.txt` and each skill declares one in its front matter. With
+neither flag, all skills are installed. Selection is additive: the installer
+does not remove skills linked by a previous run unless `--prune` is given, which
+removes managed skill links outside the current selection. Pruning only follows
+symbolic links pointing into `.agents/skills/`; unmanaged entries are left
+alone.
+
 ## Project discovery roots
 
 The installer scans these roots for Git worktrees (when present):

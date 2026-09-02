@@ -16,6 +16,7 @@ required_files=(
   "ROADMAP.md"
   "SPEC.md"
   "codex-plugins.txt"
+  "skill-categories.txt"
   "codex-home/AGENTS.md"
   "codex-home/config.toml"
   "codex-home/ollama.config.toml"
@@ -50,6 +51,40 @@ plugin_count="$(grep -Ec '^[a-z0-9][a-z0-9-]*@[a-z0-9][a-z0-9-]*$' "$repo_root/c
 
 duplicate_plugins="$(sort "$repo_root/codex-plugins.txt" | uniq -d)"
 [[ -z "$duplicate_plugins" ]] || fail "codex-plugins.txt contains duplicate plugins"
+
+category_manifest="$repo_root/skill-categories.txt"
+
+if grep -Evq '^(#.*|[a-z0-9][a-z0-9-]*: .+)$' "$category_manifest"; then
+  fail "skill-categories.txt contains an invalid category line"
+fi
+
+mapfile -t known_categories < <(sed -n 's/^\([a-z0-9][a-z0-9-]*\):.*/\1/p' "$category_manifest")
+[[ ${#known_categories[@]} -gt 0 ]] || fail "skill-categories.txt defines no categories"
+
+duplicate_categories="$(printf '%s\n' "${known_categories[@]}" | sort | uniq -d)"
+[[ -z "$duplicate_categories" ]] || fail "skill-categories.txt contains duplicate categories"
+
+# The `category:` value from a skill's YAML front matter.
+skill_category() {
+  awk '
+    NR == 1 { if ($0 != "---") exit; next }
+    /^---$/ { exit }
+    /^category:[[:space:]]*/ {
+      sub(/^category:[[:space:]]*/, "")
+      sub(/[[:space:]]+$/, "")
+      print
+      exit
+    }
+  ' "$1"
+}
+
+is_known_category() {
+  local candidate
+  for candidate in "${known_categories[@]}"; do
+    [[ "$candidate" == "$1" ]] && return 0
+  done
+  return 1
+}
 
 if command -v python3 >/dev/null 2>&1; then
   for config_file in "$repo_root"/codex-home/*.toml; do
@@ -88,7 +123,16 @@ for skill_dir in "$repo_root"/.agents/skills/*; do
   [[ "$skill_name" == "$skill_basename" ]] ||
     fail "${skill_file#"$repo_root"/} name does not match its directory"
   ! grep -q '\[TODO:' "$skill_file" || fail "${skill_file#"$repo_root"/} contains TODO placeholders"
-  actual_skills+="$skill_basename"$'\n'
+
+  skill_cat="$(skill_category "$skill_file")"
+  if [[ -z "$skill_cat" ]]; then
+    fail "${skill_file#"$repo_root"/} has no category"
+    skill_cat="?"
+  elif ! is_known_category "$skill_cat"; then
+    fail "${skill_file#"$repo_root"/} has unknown category: $skill_cat"
+  fi
+
+  actual_skills+="$skill_basename - $skill_cat"$'\n'
 done
 
 [[ $skill_count -gt 0 ]] || fail "no skills found under .agents/skills"
@@ -97,12 +141,12 @@ done
 # shellcheck disable=SC2016
 documented_skills="$(
   sed -n '/^## Repository skills$/,/^## /p' "$repo_root/docs/SKILLS.md" |
-    sed -n 's/^- `\([^`]*\)`$/\1/p' |
+    sed -n 's/^- `\([^`]*\)` - \(.*\)$/\1 - \2/p' |
     sort
 )"
 actual_skills="$(printf '%s' "$actual_skills" | sort)"
 [[ "$documented_skills" == "$actual_skills" ]] ||
-  fail "docs/SKILLS.md does not match .agents/skills"
+  fail "docs/SKILLS.md skill or category list does not match .agents/skills"
 
 # ai-project-manager ships its own template copies for standalone installs;
 # both sets must stay identical to the tracked templates.

@@ -94,6 +94,70 @@ shopt -u nullglob
 [[ ${#instruction_backups[@]} -eq 1 ]] ||
   fail "idempotent install created another AGENTS.md backup"
 
+# Category-filtered install links only the selected skills.
+filtered_claude_home="$task_test_root/filtered claude home"
+filtered_agents_home="$task_test_root/filtered agents home"
+
+HOME="$test_user_home" \
+  CODEX_HOME="$test_codex_home" \
+  AGENTS_HOME="$filtered_agents_home" \
+  CLAUDE_HOME="$filtered_claude_home" \
+  "$repo_root/scripts/install.sh" --claude --category data-engineering --skill rust-cli >/dev/null
+
+for name in data-pipeline-bdd incremental-data-load rust-cli; do
+  assert_link "$filtered_claude_home/skills/$name" "$repo_root/.agents/skills/$name"
+done
+for name in linux-sysadmin python-ai pr-readiness; do
+  [[ ! -e "$filtered_claude_home/skills/$name" ]] ||
+    fail "category filter linked an unselected skill: $name"
+done
+
+# Without --prune, a narrower selection leaves earlier links in place.
+HOME="$test_user_home" \
+  CODEX_HOME="$test_codex_home" \
+  AGENTS_HOME="$filtered_agents_home" \
+  CLAUDE_HOME="$filtered_claude_home" \
+  "$repo_root/scripts/install.sh" --claude --category workflow >/dev/null
+
+assert_link "$filtered_claude_home/skills/rust-cli" "$repo_root/.agents/skills/rust-cli"
+assert_link "$filtered_claude_home/skills/pr-readiness" "$repo_root/.agents/skills/pr-readiness"
+
+# --prune removes managed links outside the current selection.
+unmanaged_skill="$filtered_claude_home/skills/local-only"
+mkdir -p "$unmanaged_skill"
+
+HOME="$test_user_home" \
+  CODEX_HOME="$test_codex_home" \
+  AGENTS_HOME="$filtered_agents_home" \
+  CLAUDE_HOME="$filtered_claude_home" \
+  "$repo_root/scripts/install.sh" --claude --category workflow --prune >/dev/null
+
+for name in ai-project-manager project-bootstrap pr-readiness; do
+  assert_link "$filtered_claude_home/skills/$name" "$repo_root/.agents/skills/$name"
+done
+for name in data-pipeline-bdd incremental-data-load rust-cli; do
+  [[ ! -e "$filtered_claude_home/skills/$name" && ! -L "$filtered_claude_home/skills/$name" ]] ||
+    fail "--prune did not remove the unselected skill: $name"
+done
+[[ -d "$unmanaged_skill" ]] || fail "--prune removed an unmanaged skill directory"
+
+category_listing="$("$repo_root/scripts/install.sh" --list-categories)"
+grep -qx 'data-engineering - Data pipelines, ingestion, and transformation' <<<"$category_listing" ||
+  fail "--list-categories did not report the data-engineering category"
+grep -qx '  incremental-data-load' <<<"$category_listing" ||
+  fail "--list-categories did not list incremental-data-load under its category"
+
+skill_listing="$("$repo_root/scripts/install.sh" --list-skills)"
+grep -Eq '^rust-cli +systems$' <<<"$skill_listing" ||
+  fail "--list-skills did not report the rust-cli category"
+
+if "$repo_root/scripts/install.sh" --category no-such-category >/dev/null 2>&1; then
+  fail "unknown category did not fail the installer"
+fi
+if "$repo_root/scripts/install.sh" --skill no-such-skill >/dev/null 2>&1; then
+  fail "unknown skill did not fail the installer"
+fi
+
 # Cyclic symlink detection
 cycle_fixture_dir="$task_test_root/cycle fixtures"
 mkdir -p "$cycle_fixture_dir"

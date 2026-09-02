@@ -1,6 +1,7 @@
 ---
 name: linux-sysadmin
 description: Diagnose and operate Linux systems (Ubuntu, Debian, Fedora, Arch, and similar), including SSH, permissions, firewalls, packages, processes, logs, and systemd services. Use when asked to troubleshoot hosts, prepare commands, write runbooks, fix service failures, or reason about Linux administration.
+category: systems
 ---
 
 # linux-sysadmin

@@ -14,5 +14,6 @@ Repository hardening review (2026-08-12):
 
 ## Completed
 
+- [x] Categorize skills and add `--category` / `--skill` / `--prune` install selection with `skill-categories.txt` (validated via `./scripts/validate.sh`).
 - [x] Add `data-pipeline-bdd` skill for AI-driven data pipeline engineering (validated via `./scripts/validate.sh`).
 - [x] Initial portable kit foundation and multi-agent install scripts.
