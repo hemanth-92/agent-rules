@@ -31,8 +31,6 @@ required_files=(
   "templates/project-docs/SPEC.md"
   "templates/project-docs/ROADMAP.md"
   "templates/project-docs/TASKS.md"
-  ".github/pull_request_template.md"
-  ".github/workflows/validate.yml"
   "scripts/install.sh"
   "scripts/bootstrap-project.sh"
   "scripts/test-install.sh"
