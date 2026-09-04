@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read-Only Database Access"
+  short_description: "Query real databases with SELECT-only access for exploration and validation"
+  default_prompt: "Use $readonly-database-access to connect to a live database with read-only access."
