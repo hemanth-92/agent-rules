@@ -1,5 +1,7 @@
 # Project instructions
 
+> Status: TEMPLATE - not yet adapted to this project. Delete this line once filled in.
+
 ## Purpose
 
 Describe the project, its users, and the outcome it provides.

@@ -1,5 +1,7 @@
 # Project specification
 
+> Status: TEMPLATE - not yet adapted to this project. Delete this line once filled in.
+
 ## Problem
 
 Describe the problem this project solves and why it matters.

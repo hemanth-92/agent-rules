@@ -13,12 +13,17 @@ category: workflow
 
    ```bash
    /path/to/agent-rules/scripts/bootstrap-project.sh .
+
+   # or, for a small project, only the docs it needs
+   /path/to/agent-rules/scripts/bootstrap-project.sh --only SPEC,TASKS .
    ```
 
 3. If the script is unavailable, create or adapt files from the skill assets or
    the repository's `templates/project-docs/` copies.
-4. Fill in real project purpose, commands, and validation. Remove irrelevant
-   sections instead of leaving placeholders.
+4. Fill in real project purpose, commands, and validation. Delete each doc's
+   `> Status: TEMPLATE` line as it is adapted, and remove irrelevant sections
+   instead of leaving placeholders. A doc that still carries the marker is
+   unadapted, and an agent will read its instructions as project content.
 5. Confirm `AGENTS.md` documentation routing points at the planning files that
    exist.
 6. Summarize created vs skipped files and any open product decisions.

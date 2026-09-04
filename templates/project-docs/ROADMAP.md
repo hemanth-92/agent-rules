@@ -1,5 +1,7 @@
 # Project roadmap
 
+> Status: TEMPLATE - not yet adapted to this project. Delete this line once filled in.
+
 ## Phase 1: Foundation
 
 ### Outcome

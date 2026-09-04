@@ -148,6 +148,9 @@ Drop the planning template into any repository:
 # Or after a one-time global install, from any project:
 # (if you put scripts on PATH or call the clone path)
 ~/coding/agent-rules/scripts/bootstrap-project.sh .
+
+# Only the docs a small project needs
+./scripts/bootstrap-project.sh --only SPEC,TASKS /path/to/project
 ```
 
 This copies (without overwriting existing files unless `--force`):
@@ -157,8 +160,10 @@ This copies (without overwriting existing files unless `--force`):
 - `ROADMAP.md` — ordered phases and exit criteria
 - `TASKS.md` — current work and validation status
 
-Adapt the templates to the project; remove irrelevant sections instead of
-leaving placeholders.
+Each freshly copied doc carries a `> Status: TEMPLATE` line, and the script
+reports every doc that still has one. Adapt the templates to the project and
+delete that line; remove irrelevant sections instead of leaving placeholders.
+An unadapted template reads to an agent as if it were real content.
 
 ## AI development workflow
 

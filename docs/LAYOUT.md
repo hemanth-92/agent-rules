@@ -44,7 +44,10 @@ Common dependency and build directories are pruned during discovery:
 ## Project bootstrap
 
 `scripts/bootstrap-project.sh` copies files from `templates/project-docs/` into
-a target directory. Existing files are preserved unless `--force` is set.
+a target directory. Existing files are preserved unless `--force` is set, and
+`--only NAMES` limits the copy to selected docs. Templates ship with a
+`> Status: TEMPLATE` marker; the script reports every copied doc that still
+carries one so unadapted placeholders are not mistaken for real content.
 
 ## Boundaries
 

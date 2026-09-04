@@ -1,5 +1,7 @@
 # Project tasks
 
+> Status: TEMPLATE - not yet adapted to this project. Delete this line once filled in.
+
 ## Current phase
 
 - [ ] Task with one reviewable outcome.
