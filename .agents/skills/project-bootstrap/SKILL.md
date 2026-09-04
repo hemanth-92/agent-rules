@@ -1,6 +1,6 @@
 ---
 name: project-bootstrap
-description: Scaffold or refresh AI project planning docs (AGENTS.md, SPEC.md, ROADMAP.md, TASKS.md) for a repository using agent-rules templates. Use when starting a new project, adding agent docs to an existing repo, or reconciling missing planning files.
+description: Scaffold or refresh AI project planning docs (CLAUDE.md, AGENTS.md, SPEC.md, ROADMAP.md, TASKS.md) for a repository using agent-rules templates. Use when starting a new project, adding agent docs to an existing repo, or reconciling missing planning files.
 category: workflow
 ---
 
@@ -32,7 +32,7 @@ category: workflow
 
 ```bash
 git rev-parse --show-toplevel
-rg --files -g 'AGENTS.md' -g 'SPEC.md' -g 'ROADMAP.md' -g 'TASKS.md'
+rg --files -g 'CLAUDE.md' -g 'AGENTS.md' -g 'SPEC.md' -g 'ROADMAP.md' -g 'TASKS.md'
 ls templates/project-docs 2>/dev/null || true
 ```
 
@@ -46,6 +46,7 @@ ls templates/project-docs 2>/dev/null || true
 ## Validation
 
 - Required files exist at the repository root (or agreed location).
+- `CLAUDE.md` imports `AGENTS.md` so Claude Code loads it.
 - `AGENTS.md` routes to SPEC/ROADMAP/TASKS when present.
 - Placeholder sections are either filled or removed.
 - Final summary lists created, skipped, and adapted files.

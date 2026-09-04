@@ -155,6 +155,7 @@ Drop the planning template into any repository:
 
 This copies (without overwriting existing files unless `--force`):
 
+- `CLAUDE.md` — Claude Code entry point; imports `AGENTS.md`
 - `AGENTS.md` — durable agent instructions
 - `SPEC.md` — requirements and acceptance criteria
 - `ROADMAP.md` — ordered phases and exit criteria

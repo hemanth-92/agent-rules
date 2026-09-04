@@ -27,6 +27,7 @@ required_files=(
   "docs/SKILLS.md"
   "docs/WORKFLOW.md"
   "templates/project-docs/AGENTS.md"
+  "templates/project-docs/CLAUDE.md"
   "templates/project-docs/SPEC.md"
   "templates/project-docs/ROADMAP.md"
   "templates/project-docs/TASKS.md"
