@@ -1,0 +1,4 @@
+interface:
+  display_name: "Session Handoff"
+  short_description: "Carry project context across sessions with a bounded SESSIONS.md"
+  default_prompt: "Use $session-handoff to load prior context or record this session's state."

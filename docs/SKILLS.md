@@ -51,6 +51,7 @@ skill belongs to exactly one, and the installer can select skills by category.
 - `python-ai` - ai-engineering
 - `readonly-database-access` - data-engineering
 - `rust-cli` - systems
+- `session-handoff` - workflow
 
 ## Selective install
 

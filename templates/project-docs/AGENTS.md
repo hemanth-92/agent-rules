@@ -39,6 +39,9 @@ commands used by this repository.
 
 ## Documentation routing
 
+- Read `SESSIONS.md` first for prior session context, decisions, and the
+  next step. Read its `Current state` and `Decisions` sections only, unless
+  the task needs older history.
 - Read `SPEC.md` for requirements and acceptance criteria.
 - Read `ROADMAP.md` for phase order and exit criteria.
 - Read `TASKS.md` for current work and validation status.
